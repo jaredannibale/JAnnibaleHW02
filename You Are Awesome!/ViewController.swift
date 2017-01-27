@@ -14,7 +14,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var messageButton: UIButton!
     @IBOutlet weak var statementNumber: UILabel!
     
+    
+    @IBOutlet weak var sportsImage: UIImageView!
+    
+    
     var lastIndex =  -1
+    var lastImage = -1
+    let numOfImages = 10
     
     
     
@@ -36,17 +42,59 @@ class ViewController: UIViewController {
         
         var randomIndex: Int = Int(arc4random_uniform(UInt32(messages.count)))
         
-        while randomIndex == lastIndex {
-            print("Before Condition: My new randomIndex is \(randomIndex) and the lastIndex is \(lastIndex)")
-            randomIndex = Int(arc4random_uniform(UInt32(messages.count)))
-            print("After Condition: My new randomIndex is \(randomIndex) and the lastIndex is \(lastIndex)")
-        }
+        var randomImage: Int = Int(arc4random_uniform(UInt32(numOfImages)))
         
+        while randomIndex == lastIndex {
+            randomIndex = Int(arc4random_uniform(UInt32(messages.count)))
+        }
+        messageLabel.text = messages[randomIndex]
         lastIndex = randomIndex
         
-        messageLabel.text = messages[randomIndex]
-
+      
+        
+        
+        while randomImage == lastImage {
+            randomImage = Int(arc4random_uniform(UInt32(numOfImages)))
+        }
+        
+        sportsImage.isHidden = false
+        sportsImage.image = UIImage(named: "image" + String(randomImage))
+        
+        lastImage = randomImage
+        
+        
+        
+        
+        
         statementNumber.text = String(randomIndex+1)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         /* messageLabel.text = messages[in
