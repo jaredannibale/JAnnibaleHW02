@@ -11,12 +11,17 @@ import AVFoundation
 
 class ViewController: UIViewController {
     
+    // MARK: Properties
+    
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var messageButton: UIButton!
     
     @IBOutlet weak var statementNumber: UILabel!
     
     @IBOutlet weak var sportsImage: UIImageView!
+    
+    @IBOutlet weak var soundSwitch: UISwitch!
+    
     
     var soundPlayer = AVAudioPlayer()
     
@@ -33,6 +38,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
     
+    
     func playSound(soundName: String) {
         if let sound = NSDataAsset(name: soundName) {
             do {
@@ -47,6 +53,31 @@ class ViewController: UIViewController {
         
     }
     
+    func nonRepeatedRandom(last: inout Int, range: Int) -> Int {
+        var random: Int = Int(arc4random_uniform(UInt32(range)))
+        
+        while random == last {
+            random = Int(arc4random_uniform(UInt32(range)))
+        }
+        
+        last = random
+        
+        return random
+    }
+    
+    
+    // MARK: Actions
+    
+
+    @IBAction func soundSwitchPressed(_ sender: UISwitch) {
+        if soundSwitch.isOn == false {
+            if lastSound != -1 {
+            soundPlayer.stop()
+            }
+        }
+    }
+
+    
     @IBAction func messageButtonPressed(_ sender: UIButton) {
         
         
@@ -58,33 +89,22 @@ class ViewController: UIViewController {
                         "You Brighten My Day!",
                         "I Can't Wait to Use Your App!"]
         
-        var randomIndex: Int = Int(arc4random_uniform(UInt32(messages.count)))
-        var randomImage: Int = Int(arc4random_uniform(UInt32(numOfImages)))
-        var randomSound: Int = Int(arc4random_uniform(UInt32(numOfSounds)))
+        var random: Int
         
-        while randomIndex == lastIndex {
-            randomIndex = Int(arc4random_uniform(UInt32(messages.count)))
-        }
-        messageLabel.text = messages[randomIndex]
-        lastIndex = randomIndex
+        random = nonRepeatedRandom(last: &lastIndex, range: messages.count)
+        messageLabel.text = messages[random]
         
-        while randomImage == lastImage {
-            randomImage = Int(arc4random_uniform(UInt32(numOfImages)))
-        }
+        statementNumber.text = String(random+1)
         
         sportsImage.isHidden = false
-        sportsImage.image = UIImage(named: "image" + String(randomImage))
-        lastImage = randomImage
+        random = nonRepeatedRandom(last: &lastImage, range: numOfImages)
+        sportsImage.image = UIImage(named: "image" + String(random))
         
-        statementNumber.text = String(randomIndex+1)
-        
-        // the code for making sure sounds aren't repeated follows:
-        while randomSound == lastSound {
-            randomSound = Int(arc4random_uniform(UInt32(numOfSounds)))
+        if soundSwitch.isOn {
+            random = nonRepeatedRandom(last: &lastSound, range: numOfSounds)
+            playSound(soundName: "sound" + String(random))
         }
         
-        playSound(soundName: "sound" + String(randomSound))
-        lastSound = randomSound
         
         /* messageLabel.text = messages[in
          dex]
@@ -119,5 +139,8 @@ class ViewController: UIViewController {
         
         
     }
+    
+   
+    
     
 }
